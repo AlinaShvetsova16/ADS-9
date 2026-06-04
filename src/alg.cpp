@@ -9,6 +9,10 @@
 #include <functional>
 #include <vector>
 
+PMTree::PMTree(const std::vector<char>& elements) : value('\0') {
+  buildTree(elements);
+}
+
 void PMTree::buildTree(const std::vector<char>& elements) {
   if (elements.empty()) return;
 
