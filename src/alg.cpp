@@ -1,12 +1,11 @@
 // Copyright 2022 NNTU-CS
-#include  <iostream>
-#include  <fstream>
-#include  <locale>
-#include  <cstdlib>
-
 #include "tree.h"
+#include <cstdlib>
 #include <algorithm>
+#include <fstream>
 #include <functional>
+#include <iostream>
+#include <locale>
 #include <vector>
 
 PMTree::PMTree(const std::vector<char>& elements) : value('\0') {
