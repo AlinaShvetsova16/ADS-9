@@ -11,6 +11,7 @@ class PMTree {
 
   explicit PMTree() : value('\0') {}
   explicit PMTree(char val) : value(val) {}
+  explicit PMTree(const std::vector<char>& elements);
 
   ~PMTree() {
     for (auto* child : children) {
