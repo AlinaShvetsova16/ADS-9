@@ -9,7 +9,7 @@
 int main() {
     std::vector<char> in = {'1', '2', '3'};
     PMTree tree(in);
-    std::vector<std::vector<char>> perms = getAllPerms(tree);
+    std::vector<std::vector<char>> perms = getPermAll(tree);
     for (const auto& p : perms) {
         for (char c : p) std::cout << c;
         std::cout << '\n';
