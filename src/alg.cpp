@@ -1,5 +1,6 @@
 // Copyright 2022 NNTU-CS
 #include "tree.h"
+#include <cstdint>
 #include <vector>
 
 PMTree::PMTree(std::vector<char> chars) {
@@ -86,7 +87,8 @@ static void navigatePerm(Node* node, std::vector<char>& path,
     int64_t block = factorial(k - 1);
     int idx = static_cast<int>((num - 1) / block);
     if (idx >= k) return;
-    navigatePerm(node->children[idx], path, num - idx * static_cast<int>(block), out);
+    int nextNum = num - idx * static_cast<int>(block);
+    navigatePerm(node->children[idx], path, nextNum, out);
     if (node->value != 0) path.pop_back();
 }
 
