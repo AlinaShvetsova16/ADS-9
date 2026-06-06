@@ -13,11 +13,11 @@ struct Node {
     }
 };
 
-class PMTree {
+class Tree {
  public:
     Node* root;
-    explicit PMTree(std::vector<char> chars);
-    ~PMTree() { if (root) delete root; }
+    explicit Tree(std::vector<char> chars);
+    ~Tree() { if (root) delete root; }
  private:
     void buildTree(Node* node, std::vector<char> remaining);
 };
