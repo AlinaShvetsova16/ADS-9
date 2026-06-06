@@ -1,121 +1,96 @@
 // Copyright 2022 NNTU-CS
 #include "tree.h"
-
-#include <cstdlib>
-
-#include <algorithm>
-#include <fstream>
-#include <functional>
-#include <iostream>
-#include <locale>
 #include <vector>
 
-PMTree::PMTree(const std::vector<char>& elements) : value('\0') {
-  buildTree(elements);
+PMTree::PMTree(std::vector<char> chars) {
+    root = nullptr;
+    if (chars.empty()) return;
+    root = new Node(0);
+    buildTree(root, chars);
 }
 
-void PMTree::buildTree(const std::vector<char>& elements) {
-  if (elements.empty()) return;
-
-  for (char elem : elements) {
-    PMTree* child = new PMTree(elem);
-    std::vector<char> remaining;
-
-    for (char e : elements) {
-      if (e != elem) {
-        remaining.push_back(e);
-      }
-    }
-
-    child->buildTree(remaining);
-    children.push_back(child);
-  }
-}
-
-std::vector<std::vector<char>> getAllPerms(const PMTree& tree) {
-  std::vector<std::vector<char>> result;
-  std::vector<char> current;
-
-  std::function<void(const PMTree*, std::vector<char>&)> dfs =
-      [&](const PMTree* node, std::vector<char>& path) {
-        path.push_back(node->value);
-
-        if (node->children.empty()) {
-          result.push_back(path);
-        } else {
-          for (const auto* child : node->children) {
-            dfs(child, path);
-          }
+void PMTree::buildTree(Node* node, std::vector<char> remaining) {
+    if (remaining.empty()) return;
+    for (size_t i = 0; i < remaining.size(); ++i) {
+        Node* child = new Node(remaining[i]);
+        node->children.push_back(child);
+        std::vector<char> next;
+        for (size_t j = 0; j < remaining.size(); ++j) {
+            if (j != i) next.push_back(remaining[j]);
         }
-
-        path.pop_back();
-      };
-
-  for (const auto* child : tree.children) {
-    dfs(child, current);
-  }
-
-  return result;
+        buildTree(child, next);
+    }
 }
 
-std::vector<char> getPerm1(const PMTree& tree, int num) {
-  auto allPerms = getAllPerms(tree);
-  if (num <= 0 || num > static_cast<int>(allPerms.size())) {
-    return {};
-  }
-  return allPerms[num - 1];
+static void dfsCollect(Node* node, std::vector<char>& path, std::vector<std::vector<char>>& result) {
+    if (!node) return;
+    if (node->value != 0) path.push_back(node->value);
+    if (node->children.empty()) {
+        result.push_back(path);
+    } else {
+        for (auto child : node->children) {
+            dfsCollect(child, path, result);
+        }
+    }
+    if (node->value != 0) path.pop_back();
 }
 
-std::vector<char> getPerm2(const PMTree& tree, int num) {
-  int totalPerms = 1;
-  int n = tree.children.size();
+std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
+    std::vector<std::vector<char>> result;
+    if (!tree.root) return result;
+    std::vector<char> path;
+    dfsCollect(tree.root, path, result);
+    return result;
+}
 
-  for (int i = 1; i <= n; ++i) {
-    totalPerms *= i;
-  }
+static void dfsNum(Node* node, std::vector<char>& path, int& count, int target, std::vector<char>& out) {
+    if (!node || !out.empty()) return;
+    if (node->value != 0) path.push_back(node->value);
+    if (node->children.empty()) {
+        ++count;
+        if (count == target) out = path;
+    } else {
+        for (auto child : node->children) {
+            dfsNum(child, path, count, target, out);
+        }
+    }
+    if (node->value != 0) path.pop_back();
+}
 
-  if (num <= 0 || num > totalPerms) {
-    return {};
-  }
-
-  std::vector<char> result;
-  const PMTree* current = &tree;
-  std::vector<char> available;
-
-  for (const auto* child : current->children) {
-    available.push_back(child->value);
-  }
-
-  int remaining = n;
-
-  while (remaining > 0) {
-    int permsPerBranch = totalPerms / remaining;
-    int branchIndex = (num - 1) / permsPerBranch;
-
-    const PMTree* nextNode = nullptr;
+std::vector<char> getPerm1(PMTree& tree, int num) {
+    std::vector<char> out;
+    if (!tree.root || num <= 0) return out;
     int count = 0;
-    for (const auto* child : current->children) {
-      auto it = std::find(available.begin(), available.end(), child->value);
-      if (it != available.end()) {
-        if (count == branchIndex) {
-          nextNode = child;
-          break;
-        }
-        count++;
-      }
+    std::vector<char> path;
+    dfsNum(tree.root, path, count, num, out);
+    return out;
+}
+
+static long long factorial(int n) {
+    long long f = 1;
+    for (int i = 2; i <= n; ++i) f *= i;
+    return f;
+}
+
+static void navigatePerm(Node* node, std::vector<char>& path, int num, std::vector<char>& out) {
+    if (!node || !out.empty()) return;
+    if (node->value != 0) path.push_back(node->value);
+    if (node->children.empty()) {
+        if (num == 1) out = path;
+        return;
     }
+    int k = node->children.size();
+    long long block = factorial(k - 1);
+    int idx = (num - 1) / block;
+    if (idx >= k) return;
+    navigatePerm(node->children[idx], path, num - idx * block, out);
+    if (node->value != 0) path.pop_back();
+}
 
-    if (!nextNode) return {};
-
-    result.push_back(nextNode->value);
-    available.erase(std::remove(available.begin(), available.end(),
-                      nextNode->value), available.end());
-
-    current = nextNode;
-    num = ((num - 1) % permsPerBranch) + 1;
-    totalPerms = permsPerBranch;
-    remaining--;
-  }
-
-  return result;
+std::vector<char> getPerm2(PMTree& tree, int num) {
+    std::vector<char> out;
+    if (!tree.root || num <= 0) return out;
+    std::vector<char> path;
+    navigatePerm(tree.root, path, num, out);
+    return out;
 }
