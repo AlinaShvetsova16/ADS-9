@@ -1,10 +1,10 @@
 // Copyright 2022 NNTU-CS
-#include "tree.h"
 #include <cstdlib>
 #include <fstream>
 #include <locale>
 #include <iostream>
 #include <vector>
+#include "tree.h"
 
 int main() {
     std::vector<char> in = {'1', '2', '3'};
