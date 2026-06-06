@@ -22,7 +22,7 @@ class PMTree {
     void buildTree(Node* node, std::vector<char> remaining);
 };
 
-std::vector<std::vector<char>> getAllPerms(PMTree& tree);
+std::vector<std::vector<char>> getPermAll(PMTree& tree);
 std::vector<char> getPerm1(PMTree& tree, int num);
 std::vector<char> getPerm2(PMTree& tree, int num);
 
