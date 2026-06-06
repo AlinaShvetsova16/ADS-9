@@ -22,8 +22,8 @@ class Tree {
     void buildTree(Node* node, std::vector<char> remaining);
 };
 
-std::vector<std::vector<char>> getAllPerms(PMTree& tree);
-std::vector<char> getPerm1(PMTree& tree, int num);
-std::vector<char> getPerm2(PMTree& tree, int num);
+std::vector<std::vector<char>> getAllPerms(Tree& tree);
+std::vector<char> getPerm1(Tree& tree, int num);
+std::vector<char> getPerm2(Tree& tree, int num);
 
 #endif  // INCLUDE_TREE_H_
