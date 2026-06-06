@@ -2,8 +2,8 @@
 #include "tree.h"
 #include <cstdlib>
 #include <fstream>
-#include <iostream>
 #include <locale>
+#include <iostream>
 #include <vector>
 
 int main() {
