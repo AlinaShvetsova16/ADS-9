@@ -37,7 +37,7 @@ static void dfsCollect(Node* node, std::vector<char>& path,
     if (node->value != 0) path.pop_back();
 }
 
-std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
+std::vector<std::vector<char>> getPermAll(PMTree& tree) {
     std::vector<std::vector<char>> result;
     if (!tree.root) return result;
     std::vector<char> path;
