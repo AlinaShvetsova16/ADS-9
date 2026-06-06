@@ -22,7 +22,8 @@ void PMTree::buildTree(Node* node, std::vector<char> remaining) {
     }
 }
 
-static void dfsCollect(Node* node, std::vector<char>& path, std::vector<std::vector<char>>& result) {
+static void dfsCollect(Node* node, std::vector<char>& path,
+                       std::vector<std::vector<char>>& result) {
     if (!node) return;
     if (node->value != 0) path.push_back(node->value);
     if (node->children.empty()) {
@@ -43,7 +44,8 @@ std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
     return result;
 }
 
-static void dfsNum(Node* node, std::vector<char>& path, int& count, int target, std::vector<char>& out) {
+static void dfsNum(Node* node, std::vector<char>& path, int& count,
+                   int target, std::vector<char>& out) {
     if (!node || !out.empty()) return;
     if (node->value != 0) path.push_back(node->value);
     if (node->children.empty()) {
@@ -66,24 +68,25 @@ std::vector<char> getPerm1(PMTree& tree, int num) {
     return out;
 }
 
-static long long factorial(int n) {
-    long long f = 1;
+static int64_t factorial(int n) {
+    int64_t f = 1;
     for (int i = 2; i <= n; ++i) f *= i;
     return f;
 }
 
-static void navigatePerm(Node* node, std::vector<char>& path, int num, std::vector<char>& out) {
+static void navigatePerm(Node* node, std::vector<char>& path,
+                         int num, std::vector<char>& out) {
     if (!node || !out.empty()) return;
     if (node->value != 0) path.push_back(node->value);
     if (node->children.empty()) {
         if (num == 1) out = path;
         return;
     }
-    int k = node->children.size();
-    long long block = factorial(k - 1);
-    int idx = (num - 1) / block;
+    int k = static_cast<int>(node->children.size());
+    int64_t block = factorial(k - 1);
+    int idx = static_cast<int>((num - 1) / block);
     if (idx >= k) return;
-    navigatePerm(node->children[idx], path, num - idx * block, out);
+    navigatePerm(node->children[idx], path, num - idx * static_cast<int>(block), out);
     if (node->value != 0) path.pop_back();
 }
 
