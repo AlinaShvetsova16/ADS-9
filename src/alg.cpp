@@ -1,7 +1,7 @@
 // Copyright 2022 NNTU-CS
 #include "tree.h"
-#include <cstdint>
 #include <vector>
+#include <cstdint>
 
 PMTree::PMTree(std::vector<char> chars) {
     root = nullptr;
