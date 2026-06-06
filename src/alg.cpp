@@ -3,14 +3,14 @@
 #include <vector>
 #include "tree.h"
 
-Tree::Tree(std::vector<char> chars) {
+PMTree::PMTree(std::vector<char> chars) {
     root = nullptr;
     if (chars.empty()) return;
     root = new Node(0);
     buildTree(root, chars);
 }
 
-void Tree::buildTree(Node* node, std::vector<char> remaining) {
+void PMTree::buildTree(Node* node, std::vector<char> remaining) {
     if (remaining.empty()) return;
     for (size_t i = 0; i < remaining.size(); ++i) {
         Node* child = new Node(remaining[i]);
@@ -37,7 +37,7 @@ static void dfsCollect(Node* node, std::vector<char>& path,
     if (node->value != 0) path.pop_back();
 }
 
-std::vector<std::vector<char>> getAllPerms(Tree& tree) {
+std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
     std::vector<std::vector<char>> result;
     if (!tree.root) return result;
     std::vector<char> path;
@@ -60,7 +60,7 @@ static void dfsNum(Node* node, std::vector<char>& path, int& count,
     if (node->value != 0) path.pop_back();
 }
 
-std::vector<char> getPerm1(Tree& tree, int num) {
+std::vector<char> getPerm1(PMTree& tree, int num) {
     std::vector<char> out;
     if (!tree.root || num <= 0) return out;
     int count = 0;
@@ -92,7 +92,7 @@ static void navigatePerm(Node* node, std::vector<char>& path,
     if (node->value != 0) path.pop_back();
 }
 
-std::vector<char> getPerm2(Tree& tree, int num) {
+std::vector<char> getPerm2(PMTree& tree, int num) {
     std::vector<char> out;
     if (!tree.root || num <= 0) return out;
     std::vector<char> path;
