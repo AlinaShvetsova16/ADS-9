@@ -4,26 +4,26 @@
 
 #include <vector>
 
-class PMTree {
- public:
-  char value;
-  std::vector<PMTree*> children;
-
-  explicit PMTree() : value('\0') {}
-  explicit PMTree(char val) : value(val) {}
-  explicit PMTree(const std::vector<char>& elements);
-
-  ~PMTree() {
-    for (auto* child : children) {
-      delete child;
+struct Node {
+    char value;
+    std::vector<Node*> children;
+    Node(char v) : value(v) {}
+    ~Node() {
+        for (auto child : children) delete child;
     }
-  }
-
-  void buildTree(const std::vector<char>& elements);
 };
 
-std::vector<std::vector<char>> getAllPerms(const PMTree& tree);
-std::vector<char> getPerm1(const PMTree& tree, int num);
-std::vector<char> getPerm2(const PMTree& tree, int num);
+class PMTree {
+public:
+    Node* root;
+    PMTree(std::vector<char> chars);
+    ~PMTree() { if (root) delete root; }
+private:
+    void buildTree(Node* node, std::vector<char> remaining);
+};
 
-#endif  // INCLUDE_TREE_H_
+std::vector<std::vector<char>> getAllPerms(PMTree& tree);
+std::vector<char> getPerm1(PMTree& tree, int num);
+std::vector<char> getPerm2(PMTree& tree, int num);
+
+#endif
